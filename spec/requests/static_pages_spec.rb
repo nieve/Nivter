@@ -2,13 +2,17 @@ require 'spec_helper'
 
 describe "StaticPages" do
   describe "home page" do
-    it "should have the content nivter" do
+    it "should have the h1 nivter" do
       visit '/static_pages/home'
-      page.should have_content('nivter')
+      page.should have_selector('h1', :text=> 'nivter')
     end
-    it "should have the title home" do
+    it "should not have the title Home" do
       visit '/static_pages/home'
-      page.should have_selector('title', :text => 'Nivter | Home')
+      page.should_not have_selector('title', :text=> 'Home')
+    end
+    it "should have the title Nivter" do
+      visit '/static_pages/home'
+      page.should have_selector('title', :text => 'Nivter')
     end
   end
   describe "Help page" do
