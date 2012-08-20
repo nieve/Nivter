@@ -35,4 +35,14 @@ describe "StaticPages" do
       page.should have_selector('title', :text => 'Nivter | About')
     end
   end
+  describe "Contact" do
+    it "should have contact title" do
+      visit '/static_pages/contact'
+      page.should have_selector('title', :text => 'Nivter | Contact')
+    end
+    it "should have contact h1" do
+      visit '/static_pages/contact'
+      page.should have_selector('h1', :text => 'Contact Us')
+    end
+  end
 end
