@@ -48,6 +48,12 @@ describe User do
   	end
   	it {should_not be_valid}
   end
+  describe "email address" do
+    before {@user.email = "DOWNCASE@EMAIL.COM"; @user.save;}
+    it "should be down cased when saved" do
+      @user.email.should == "downcase@email.com"
+    end
+  end
   describe "when password is not present" do
     before { @user.password = @user.password_confirmation = " " }
     it { should_not be_valid }
