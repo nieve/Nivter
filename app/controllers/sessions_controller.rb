@@ -2,9 +2,8 @@ class SessionsController < ApplicationController
 	def new
 	end
 	def create
-		session = params[:session]
-		user = User.find_by_email(session[:email])
-  	if user && user.authenticate(session[:password])
+		user = User.find_by_email(params[:email])
+  	if user && user.authenticate(params[:password])
       sign_in user
   		redirect_to user
   	else
