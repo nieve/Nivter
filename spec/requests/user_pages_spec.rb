@@ -73,4 +73,18 @@ describe "User pages" do
       specify {user.reload.email.should == new_email}
     end
   end
+  describe "index" do
+    before do
+      sign_in FactoryGirl.create(:user)
+      FactoryGirl.create(:user, name: 'kyoko', email: 'second@email.com')
+      FactoryGirl.create(:user, name: 'shinto', email: 'third@email.com')
+      visit users_path
+    end
+    it {should have_selector('title', text: 'Nivter Users')}
+    it "should list each user" do
+      User.all.each do |user|
+        page.should have_selector('li', text: user.name)
+      end
+    end
+  end
 end
