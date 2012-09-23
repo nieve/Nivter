@@ -80,6 +80,24 @@ describe "Authentication" do
           end
         end
       end
+      describe "as non-admin user" do
+        let(:user) { FactoryGirl.create(:user) }
+        let(:non_admin) { FactoryGirl.create(:user) }
+
+        before { sign_in non_admin }
+
+        describe "submitting a DELETE request to the Users#destroy action" do
+          before { delete user_path(user) }
+          specify { response.should redirect_to(root_path) }        
+        end
+      end
+      describe "admin user" do
+        let(:admin) { FactoryGirl.create(:admin) }
+        before {sign_in admin}
+        it "can't delete itself" do
+          expect {delete user_path(admin)}.to_not change(User, :count)
+        end
+      end
     end
   end
 end
