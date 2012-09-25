@@ -6,7 +6,8 @@ describe User do
 	subject {@user}
   it {should respond_to(:admin)}
 	it {should respond_to(:email)}
-	it {should respond_to(:name)}
+  it {should respond_to(:name)}
+	it {should respond_to(:microposts)}
 	it { should_not be_accessible :admin }
   it { should respond_to(:password_digest) }
   it { should respond_to(:remember_token) }
