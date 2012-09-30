@@ -6,6 +6,10 @@ class User < ActiveRecord::Base
   before_save {self.email.downcase!}
   before_save :create_remember_token
 
+  def feed
+    Micropost.where("user_id = ?", id)
+  end
+
   def create_remember_token
   	self.remember_token = SecureRandom.urlsafe_base64
   end
