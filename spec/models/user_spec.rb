@@ -6,12 +6,33 @@ describe User do
 	subject {@user}
   it {should respond_to(:admin)}
 	it {should respond_to(:email)}
-	it {should respond_to(:name)}
+  it {should respond_to(:name)}
+  it {should respond_to(:microposts)}
+	it {should respond_to(:feed)}
 	it { should_not be_accessible :admin }
   it { should respond_to(:password_digest) }
   it { should respond_to(:remember_token) }
   it { should respond_to(:authenticate) }
 	it {should be_valid}
+  describe "microposts association" do
+    before {@user.save}
+    let!(:old_micro) {FactoryGirl.create(:micropost, user: @user, created_at: 1.day.ago)}
+    let!(:newer_micro) {FactoryGirl.create(:micropost, user: @user, created_at: 1.hour.ago)}
+    its(:microposts) {should == [newer_micro, old_micro]}
+    it "has non-orphan relations" do
+      microposts = @user.microposts
+      @user.destroy
+      microposts.each do |m|
+        Micropost.find_by_id(m.id).should be_nil
+      end
+    end
+    describe "status" do
+      let(:unfollowed_micro){FactoryGirl.create(:micropost, user:FactoryGirl.create(:user))}
+      its(:feed){should include(newer_micro)}
+      its(:feed){should include(old_micro)}
+      its(:feed){should_not include(unfollowed_micro)}
+    end
+  end
   describe "remember token" do
     before {@user.save}
     its(:remember_token) {should_not be_blank}

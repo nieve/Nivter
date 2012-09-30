@@ -98,6 +98,17 @@ describe "Authentication" do
           expect {delete user_path(admin)}.to_not change(User, :count)
         end
       end
+      describe "manipulating microposts" do
+        let(:user) {FactoryGirl.create(:user)}
+        describe "creating microposts" do
+          before {post microposts_path}
+          specify {response.should redirect_to(signin_path)}
+        end
+        describe "deleting microposts" do
+          before {delete micropost_path(FactoryGirl.create(:micropost))}
+          specify {response.should redirect_to(signin_path)}
+        end
+      end
     end
   end
 end
