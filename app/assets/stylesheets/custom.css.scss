@@ -145,6 +145,10 @@ input, textarea, select, .uneditable-input {
   @include box_sizing;
 }
 
+input, textarea, select, .add-micropost{
+  width: 275px;
+}
+
 #error_explanation {
   color: #f00;
   ul {
