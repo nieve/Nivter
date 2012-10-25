@@ -15,6 +15,39 @@ describe "User pages" do
     it { should have_content(m1.content) }
     it { should have_content(m2.content) }
     it { should have_content(user.microposts.count) }
+    describe "follow button" do
+      let(:other_user) {FactoryGirl.create(:user)}
+      before {sign_in(user)}
+      describe "following a user" do
+        before {visit user_path(other_user)}
+        it "should increment the followed user count" do
+          expect {click_button "Follow"}.to change(user.followed_users, :count).by(1)
+        end
+        it "should increment the followers user count" do
+          expect {click_button "Follow"}.to change(other_user.followers, :count).by(1)
+        end
+        describe "toggling the follow button" do
+          before {click_button "Follow"}
+          it {should have_selector('input', value: 'Unfollow')}
+        end
+      end
+      describe "unfollowing a user" do
+        before do
+          user.follow!(other_user)
+          visit user_path(other_user)
+        end
+        it "should decrement followed user count"do
+          expect {click_button "Unfollow"}.to change(user.followed_users, :count).by(-1)
+        end
+        it "should decrement followers user count"do
+          expect {click_button "Unfollow"}.to change(other_user.followers, :count).by(-1)
+        end
+        describe "toggling the follow button" do
+          before {click_button "Unfollow"}
+          it {should have_selector('input', value: 'Follow')}
+        end
+      end
+    end
   end
   describe "signup" do
     before { visit signup_path }
@@ -110,6 +143,29 @@ describe "User pages" do
         end
         it { should_not have_link('delete', href: user_path(admin)) }
       end
+    end
+  end
+  describe "following/followers" do
+    let(:user) {FactoryGirl.create(:user)}
+    let(:followed) {FactoryGirl.create(:user)}
+    before {user.follow!(followed)}
+    describe "following" do
+      before do
+        sign_in user
+        visit following_user_path(user)
+      end
+      it { should have_selector('title', text: full_title('Following')) }
+      it { should have_selector('h3', text: 'Following') }
+      it {should have_link(followed.name, href: user_path(followed))}
+    end
+    describe "followers" do
+      before do
+        sign_in followed
+        visit followers_user_path(followed)
+      end
+      it { should have_selector('title', text: full_title('Followers')) }
+      it { should have_selector('h3', text: 'Followers') }
+      it {should have_link(user.name, href: user_path(user))}
     end
   end
 end

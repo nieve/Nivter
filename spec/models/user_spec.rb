@@ -8,7 +8,13 @@ describe User do
 	it {should respond_to(:email)}
   it {should respond_to(:name)}
   it {should respond_to(:microposts)}
-	it {should respond_to(:feed)}
+  it {should respond_to(:feed)}
+  it {should respond_to(:relationships)}
+  it {should respond_to(:followed_users)}
+  it {should respond_to(:followers)}
+  it {should respond_to(:following?)}
+  it {should respond_to(:follow!)}
+	it {should respond_to(:unfollow!)}
 	it { should_not be_accessible :admin }
   it { should respond_to(:password_digest) }
   it { should respond_to(:remember_token) }
@@ -31,6 +37,26 @@ describe User do
       its(:feed){should include(newer_micro)}
       its(:feed){should include(old_micro)}
       its(:feed){should_not include(unfollowed_micro)}
+    end
+    describe "followed users posts in feed" do
+      let(:other_user) {FactoryGirl.create(:user)}
+      before {@user.follow!(other_user)}
+      let(:followed_post){FactoryGirl.create(:micropost, user: other_user)}
+      its(:feed) {should include(followed_post)}
+    end
+  end
+  describe "following" do
+    let(:other_user) {FactoryGirl.create(:user)}
+    before {@user.save; @user.follow!(other_user)}
+    it {should be_following(other_user)}
+    its(:followed_users) {should include(other_user)}
+    describe "unfollow" do
+      before {@user.unfollow!(other_user)}
+      it {should_not be_following(other_user)}
+    end
+    describe "followed user" do
+      subject {other_user}
+      its(:followers) {should include(@user)}
     end
   end
   describe "remember token" do

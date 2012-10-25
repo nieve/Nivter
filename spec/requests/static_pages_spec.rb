@@ -24,6 +24,15 @@ describe "StaticPages" do
         page.should have_selector('li', :text => 'stabat matter')
         page.should have_selector('li', :text => 'de la rosa')
       end
+      describe "followers/following counts" do
+        let(:other_user) {FactoryGirl.create(:user)}
+        before do
+          user.follow!(other_user)
+          visit root_path
+        end
+        it {should have_link('1 following', herf: following_user_path(user))}
+        it {should have_link('0 followers', herf: followers_user_path(user))}
+      end
     end
   end
   describe "Help page" do
