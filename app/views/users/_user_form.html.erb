@@ -12,5 +12,71 @@
 	<%= f.label :password_confirmation, "Confirm Password" %>
 	<%= f.password_field :password_confirmation %>
 
+	<label>Areas of Experience</label>
+	<input type="hidden" id="experience" name="user[experience]" value="<%= user.experience %>" />
+	<div id='tagdisplay'>
+		<% user.experience_tags.each do |tag| %>
+			<span class="sotag"><%= tag %><span title="remove this tag" class="delete-tag">x</span></span>
+		<% end %>
+	</div>
+	<div class='break'></div>
+	<input type="text" id="exp_tags" list="tags" />
+	<span class="addTag btn btn-small">+</span>
+	<datalist id="tags">
+	</datalist>
+	<script type="text/javascript">
+		$(function(){
+			$('#exp_tags').keyup(delayRequest);
+			function dataRequest() {
+				$('#tags').html('');
+				var input = $('#exp_tags').val();
+				$.ajax({ url: 'https://api.stackexchange.com/2.0/tags?inname='+ input + '&pagesize=10&site=stackoverflow&key=b%29S0aJ98RX%29vVWdxW1obTw%28%28&jsonp=soResponse',
+				  dataType: 'jsonp',
+				  timeout: 10000,
+				  jsonp: "callback",
+				  success: addOption,
+				});
+			}
+			function addOption(data){
+				$.each(data.items, function() {
+					$('#tags').append('<option value="' + this.name + '">');
+				});
+			};
+			function delayRequest(ev) {
+				if (ev.which < 41 && ev.which > 8) return false;
+				if ($('#exp_tags').val() == '') return false;
+		    if(delayRequest.timeout) {
+		        clearTimeout(delayRequest.timeout);
+		    }
+		    var target = this;
+		    delayRequest.timeout = setTimeout(function() {
+		        dataRequest.call(target, ev);
+		    }, 800);
+			};
+			function deleteTag(){
+				var parent = $(this).parent();
+				$(this).remove();
+				var tag = parent.html();
+				var exp = $('#experience').val();
+				$('#experience').val(exp.replace(tag, ''));
+				parent.remove();
+			}
+			$('.delete-tag').click(deleteTag);
+			$('.addTag').click(function(){
+				var tag = $('#exp_tags').val();
+				if (tag != '') {
+					var exp = $('#experience').val() + ' ' + tag;
+					$('#experience').val(exp.replace(/^\s\s*/, '').replace(/\s\s*$/, ''));
+					var delTag = $('<span title="remove this tag" class="delete-tag">x</span>');
+					var taghtml = $('<span class="sotag">' + tag + '</span>');
+					taghtml.append(delTag);
+					delTag.click(deleteTag);
+					$('#tagdisplay').append(taghtml);
+					$('#exp_tags').val('');
+				}
+			});
+		});
+	</script>
+</br>
 	<%= f.submit "Submit", class: "btn btn-large btn-primary" %>
 <% end %>

@@ -88,6 +88,7 @@ describe "User pages" do
     describe "page" do
       it { should have_selector('h1',    text: "Update your profile") }
       it { should have_selector('title', text: "Edit #{user.name}") }
+      it { should have_selector('.sotag', text: "mvc") }
       it { should have_link('change', href: 'http://gravatar.com/emails') }
     end
     describe "with invalid information" do

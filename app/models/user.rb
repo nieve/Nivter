@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  attr_accessible :email, :name, :password, :password_confirmation
+  attr_accessible :email, :name, :password, :password_confirmation, :experience
   has_many :microposts, dependent: :destroy
   has_many :relationships, foreign_key: 'follower_id', dependent: :destroy
   has_many :reverse_relationships, foreign_key: 'followed_id', 
@@ -14,6 +14,11 @@ class User < ActiveRecord::Base
   def feed
     # Micropost.where("user_id = ?", id)
     Micropost.from_users_followed_by(self)
+  end
+
+  def experience_tags
+    return [] if experience.nil?
+    experience.split
   end
 
   def following? user

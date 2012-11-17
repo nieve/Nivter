@@ -234,3 +234,44 @@ aside {
     margin-bottom: 5px;
   }
 }
+#exp_tags{
+  margin-top: 5px;
+}
+#tagdisplay{
+  float: left;
+  width: 275px;
+  word-wrap: break-word;
+}
+.break{
+  float: left;
+  width: 275px;
+}
+.sotag {
+  background-color: #E0EAF1;
+  border-bottom: 1px solid #3E6D8E;
+  border-right: 1px solid #7F9FB6;
+  color: #3E6D8E;
+  font-size: 90%;
+  margin: 2px 2px 2px 0;
+  padding: 1px 2px;
+  float: left;
+  .delete-tag {
+    margin-left: 2px;
+    color: red;
+    font-weight: bold;
+    &:hover {
+      cursor: hand;
+      cursor: pointer;
+    }
+  }
+}
+.addTag {
+  font-size: 17px;
+  font-weight: bold;
+  height: 15px;
+  margin-bottom: 5px;
+  &:hover {
+    cursor: hand;
+    cursor: pointer;
+  }
+}

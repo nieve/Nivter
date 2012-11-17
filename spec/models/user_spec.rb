@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe User do
 	before {@user = User.new(name: 'kyoko', email:'k@gawa.jp',
-									password: 'tokyostory', password_confirmation: 'tokyostory')}
+									password: 'tokyostory', experience:'mvc', password_confirmation: 'tokyostory')}
 	subject {@user}
   it {should respond_to(:admin)}
 	it {should respond_to(:email)}
@@ -12,6 +12,7 @@ describe User do
   it {should respond_to(:relationships)}
   it {should respond_to(:followed_users)}
   it {should respond_to(:followers)}
+  it {should respond_to(:experience)}
   it {should respond_to(:following?)}
   it {should respond_to(:follow!)}
 	it {should respond_to(:unfollow!)}
