@@ -11,6 +11,19 @@ class User < ActiveRecord::Base
   before_save {self.email.downcase!}
   before_save :create_remember_token
 
+  def self.search_by_experience(experience)
+    users = User.scoped
+    experiences = experience.split
+    condition = 'experience LIKE :b OR experience LIKE :e OR experience LIKE :t'
+    if experiences.length == 1
+      tag = experiences[0]
+      users = users.where(condition + ' OR experience = :q', b: "#{tag} %", e: "% #{tag}", t: "% #{tag} %", q: tag)
+    else
+      experiences.each {|tag| users = users.where(condition, b: "#{tag} %", e: "% #{tag}", t: "% #{tag} %")}
+    end
+    users
+  end
+
   def feed
     # Micropost.where("user_id = ?", id)
     Micropost.from_users_followed_by(self)

@@ -1,6 +1,19 @@
 <% provide(:title, "Nivter Users") %>
-<h1>Update your profile</h1>
+<h1>Users</h1>
 
+<div class='search'>
+	<label>Search for experienced users:</label>
+	<input type='text' class='search_term' />
+	<a href="<%= users_path %>" class='btn btn-mini'>Search</a>
+</div>
+<script type="text/javascript">
+	$(function(){
+		$('.search a.btn').click(function(){
+			href = $(this).attr('href');
+			$(this).attr('href', href + '?search=' + $('.search_term').val());
+		});
+	});
+</script>
 <%= will_paginate %>
 
 <ul class='users'>

@@ -64,6 +64,23 @@ describe User do
     before {@user.save}
     its(:remember_token) {should_not be_blank}
   end
+  describe "search by experience" do
+    before do
+      @user.save
+      sec_user = User.new(name: 'kyokox', email:'k@gawax.jp', password: 'tokyostoryx', experience:'mvc msmq mssql', password_confirmation: 'tokyostoryx')
+      sec_user.save
+    end
+    let(:search_results) {User.search_by_experience('msmq mvc')}
+    specify {search_results.length.should == 1}
+    specify {search_results[0].email.should == 'k@gawax.jp'}
+    it "should find users only by exact match on tags" do
+      User.search_by_experience('mv').length.should == 0
+      User.search_by_experience('mvc ms').length.should == 0
+      User.search_by_experience('mvc mssql').length.should == 1
+      User.search_by_experience('mssql').length.should == 1
+      User.search_by_experience('mvc').length.should == 2
+    end
+  end
 	describe "when name is not present" do
 		before {@user.name = " "}
 		it {should_not be_valid}

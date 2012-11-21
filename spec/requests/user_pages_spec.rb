@@ -112,6 +112,33 @@ describe "User pages" do
       specify {user.reload.email.should == new_email}
     end
   end
+  ############ ADDED SEARCH - TEST IT (On Url with query string)
+  ############ Also, added experience display on show (for commit msg)
+  describe "search" do
+    let(:user) {FactoryGirl.create(:user)}
+    before(:all) do
+      30.times {FactoryGirl.create(:user)}
+      user.experience = "asp.net"
+      user.save
+    end
+    before(:each) do
+      sign_in user
+      visit users_path + '/?search=asp.net'
+    end
+    after(:all) do
+      User.delete_all
+      user.experience = "msmq mvc"
+      user.save
+    end
+    it "should display search results" do
+      page.should have_selector('li', text: user.name)
+    end
+    it "should not display unfound users" do
+      User.where("experience != '#{user.experience}'").each do |u|
+        page.should_not have_link(u.name, href: user_path(u))
+      end
+    end
+  end
   describe "index" do
     let(:user) {FactoryGirl.create(:user)}
     before(:each) do

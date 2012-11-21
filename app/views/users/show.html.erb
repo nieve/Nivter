@@ -10,6 +10,14 @@
 		<section>
 			<%= render 'shared/stats' %>
 		</section>
+		<section>
+			<h4>Areas of experience</h4>
+			<div id='tagdisplay'>
+				<% @user.experience_tags.each do |tag| %>
+					<a href="/users?search=<%=tag%>"><span class="sotag"><%= tag %></span></a>
+				<% end %>
+			</div>
+		</section>
 	</aside>
 	<div class="span8">
 		<%= render 'follow_form' if (signed_in? and not current_user?(@user)) %>
