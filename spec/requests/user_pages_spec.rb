@@ -12,6 +12,9 @@ describe "User pages" do
 
     it { should have_selector('h1',    text: user.name) }
     it { should have_selector('title', text: user.name) }
+    it { should have_selector('#tagdisplay .sotag', text: "msmq") }
+    it { should have_selector('#interestdisplay .sotag', text: "nancyfx") }
+    ### TODO: add tests for cases where experience & interests are empty ####
     it { should have_content(m1.content) }
     it { should have_content(m2.content) }
     it { should have_content(user.microposts.count) }
@@ -112,8 +115,6 @@ describe "User pages" do
       specify {user.reload.email.should == new_email}
     end
   end
-  ############ ADDED SEARCH - TEST IT (On Url with query string)
-  ############ Also, added experience display on show (for commit msg)
   describe "search" do
     let(:user) {FactoryGirl.create(:user)}
     before(:all) do

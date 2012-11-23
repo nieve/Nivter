@@ -5,6 +5,7 @@ FactoryGirl.define do
 		password "foobar"
 		password_confirmation "foobar"
 		experience "msmq mvc"
+		interested_in "nancyfx fubumvc"
 		
 		factory :admin do
 			admin true

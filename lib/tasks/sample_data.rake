@@ -12,9 +12,10 @@ def make_users
                        email:    "example@railstutorial.org",
                        password: "foobar",
                        experience: "msmq mvc sysadmin mssql",
+                       interested_in: "nservicebus backbone",
                        password_confirmation: "foobar")
   admin.toggle!(:admin)
-  99.times do |n|
+  98.times do |n|
     name  = Faker::Name.name
     email = "example-#{n+1}@railstutorial.org"
     password  = "password"
@@ -23,8 +24,19 @@ def make_users
                  email:    email,
                  password: password,
                  experience: experience,
+                 interested_in: "mssql backbone",
                  password_confirmation: password)
   end
+  name  = Faker::Name.name
+  email = "example-100@railstutorial.org"
+  password  = "password"
+  experience = "mvc nservicebus"
+  User.create!(name:     name,
+               email:    email,
+               password: password,
+               experience: experience,
+               interested_in: "mssql mssql backbone",
+               password_confirmation: password)
 end
 
 def make_microposts

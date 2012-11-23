@@ -18,6 +18,14 @@
 				<% end %>
 			</div>
 		</section>
+		<section>
+			<h4>Areas of interest</h4>
+			<div id='interestdisplay'>
+				<% @user.interested_in_tags.each do |tag| %>
+					<a href="/users?search=<%=tag%>"><span class="sotag"><%= tag %></span></a>
+				<% end %>
+			</div>
+		</section>
 	</aside>
 	<div class="span8">
 		<%= render 'follow_form' if (signed_in? and not current_user?(@user)) %>

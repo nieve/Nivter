@@ -13,6 +13,7 @@ describe User do
   it {should respond_to(:followed_users)}
   it {should respond_to(:followers)}
   it {should respond_to(:experience)}
+  it {should respond_to(:interested_in)}
   it {should respond_to(:following?)}
   it {should respond_to(:follow!)}
 	it {should respond_to(:unfollow!)}
