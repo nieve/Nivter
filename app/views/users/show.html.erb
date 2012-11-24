@@ -13,6 +13,7 @@
 		<section>
 			<h4>Areas of experience</h4>
 			<div id='tagdisplay'>
+				<%= 'none indicated' if @user.experience_tags.empty? %>
 				<% @user.experience_tags.each do |tag| %>
 					<a href="/users?search=<%=tag%>"><span class="sotag"><%= tag %></span></a>
 				<% end %>
@@ -21,6 +22,7 @@
 		<section>
 			<h4>Areas of interest</h4>
 			<div id='interestdisplay'>
+				<%= 'none indicated' if @user.interested_in_tags.empty? %>
 				<% @user.interested_in_tags.each do |tag| %>
 					<a href="/users?search=<%=tag%>"><span class="sotag"><%= tag %></span></a>
 				<% end %>

@@ -12,12 +12,17 @@ describe "User pages" do
 
     it { should have_selector('h1',    text: user.name) }
     it { should have_selector('title', text: user.name) }
-    it { should have_selector('#tagdisplay .sotag', text: "msmq") }
-    it { should have_selector('#interestdisplay .sotag', text: "nancyfx") }
-    ### TODO: add tests for cases where experience & interests are empty ####
+    it { should have_selector('#tagdisplay .sotag', text: "msmq")}
+    it { should have_selector('#interestdisplay .sotag', text: "nancyfx")}
     it { should have_content(m1.content) }
     it { should have_content(m2.content) }
     it { should have_content(user.microposts.count) }
+    describe "no tags" do
+      let(:boring_user) {FactoryGirl.create(:user, experience: '', interested_in: '')}
+      before {visit user_path(boring_user)}
+      it {should have_selector('#tagdisplay', text: "none indicated")}
+      it {should have_selector('#interestdisplay', text: "none indicated")}
+    end
     describe "follow button" do
       let(:other_user) {FactoryGirl.create(:user)}
       before {sign_in(user)}
