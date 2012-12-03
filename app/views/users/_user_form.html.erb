@@ -14,22 +14,34 @@
 
 	<label>Areas of Experience</label>
 	<input type="hidden" id="experience" name="user[experience]" value="<%= user.experience %>" />
-	<div id='tagdisplay'>
+	<div class="tags_display" id='tagdisplay'>
 		<% user.experience_tags.each do |tag| %>
 			<span class="sotag"><%= tag %><span title="remove this tag" class="delete-tag">x</span></span>
 		<% end %>
 	</div>
+	<div class="break"></div>
+	<input type="text" class="exp_tags" id="exp_tags" list="exptags" />
+	<span id="addExp" class="addTag btn btn-small">+</span>
+	<datalist id="exptags" class="tags">
+	</datalist>
+	<label>Sought After Experience</label>
+	<input type="hidden" id="interested_in" name="user[interested_in]" value="<%= user.interested_in %>" />
+	<div class="tags_display" id='interestTagdisplay'>
+		<% user.interests.each do |tag| %>
+			<span class="sotag"><%= tag %><span title="remove this tag" class="delete-tag">x</span></span>
+		<% end %>
+	</div>
 	<div class='break'></div>
-	<input type="text" id="exp_tags" list="tags" />
-	<span class="addTag btn btn-small">+</span>
-	<datalist id="tags">
+	<input type="text" class="exp_tags" id="sought_tags" list="soughtags" />
+	<span id="addInterest" class="addTag btn btn-small">+</span>
+	<datalist id="soughtags" class="tags">
 	</datalist>
 	<script type="text/javascript">
 		$(function(){
-			$('#exp_tags').keyup(delayRequest);
+			$('.exp_tags').keyup(delayRequest);
 			function dataRequest() {
-				$('#tags').html('');
-				var input = $('#exp_tags').val();
+				$('.tags').html('');
+				var input = $(this).val();
 				$.ajax({ url: 'https://api.stackexchange.com/2.0/tags?inname='+ input + '&pagesize=10&site=stackoverflow&key=b%29S0aJ98RX%29vVWdxW1obTw%28%28&jsonp=soResponse',
 				  dataType: 'jsonp',
 				  timeout: 10000,
@@ -39,12 +51,12 @@
 			}
 			function addOption(data){
 				$.each(data.items, function() {
-					$('#tags').append('<option value="' + this.name + '">');
+					$('.tags').append('<option value="' + this.name + '">');
 				});
 			};
 			function delayRequest(ev) {
 				if (ev.which < 41 && ev.which > 8) return false;
-				if ($('#exp_tags').val() == '') return false;
+				if ($(this).val() == '') return false;
 		    if(delayRequest.timeout) {
 		        clearTimeout(delayRequest.timeout);
 		    }
@@ -57,24 +69,30 @@
 				var parent = $(this).parent();
 				$(this).remove();
 				var tag = parent.html();
-				var exp = $('#experience').val();
-				$('#experience').val(exp.replace(tag, ''));
+				var tags = parent.parent().prev();
+				var exp = tags.val();
+				tags.val(exp.replace(tag, ''));
 				parent.remove();
 			}
 			$('.delete-tag').click(deleteTag);
-			$('.addTag').click(function(){
-				var tag = $('#exp_tags').val();
-				if (tag != '') {
-					var exp = $('#experience').val() + ' ' + tag;
-					$('#experience').val(exp.replace(/^\s\s*/, '').replace(/\s\s*$/, ''));
-					var delTag = $('<span title="remove this tag" class="delete-tag">x</span>');
-					var taghtml = $('<span class="sotag">' + tag + '</span>');
-					taghtml.append(delTag);
-					delTag.click(deleteTag);
-					$('#tagdisplay').append(taghtml);
-					$('#exp_tags').val('');
-				}
+			$('#addExp').click(function(){
+				tryAddTag($('#exp_tags'), $('#experience'), $('#tagdisplay'));
 			});
+			$('#addInterest').click(function(){
+				tryAddTag($('#sought_tags'), $('#interested_in'), $('#interestTagdisplay'));
+			});
+			function tryAddTag(tagToAdd, currentTags, section){
+				if (tagToAdd.val() != '') {
+					var exp = currentTags.val() + ' ' + tagToAdd.val();
+					currentTags.val(exp.replace(/^\s\s*/, '').replace(/\s\s*$/, ''));
+					var delTag = $('<span title="remove this tag" class="delete-tag">x</span>');
+					var tagHtml = $('<span class="sotag">'+ tagToAdd.val() +'</span>');
+					tagHtml.append(delTag);
+					delTag.click(deleteTag);
+					section.append(tagHtml);
+					tagToAdd.val('');
+				}
+			}
 		});
 	</script>
 </br>

@@ -22,8 +22,8 @@
 		<section>
 			<h4>Areas of interest</h4>
 			<div id='interestdisplay'>
-				<%= 'none indicated' if @user.interested_in_tags.empty? %>
-				<% @user.interested_in_tags.each do |tag| %>
+				<%= 'none indicated' if @user.interests.empty? %>
+				<% @user.interests.each do |tag| %>
 					<a href="/users?search=<%=tag%>"><span class="sotag"><%= tag %></span></a>
 				<% end %>
 			</div>

@@ -33,7 +33,7 @@ class User < ActiveRecord::Base
     experience.split
   end
 
-  def interested_in_tags
+  def interests
     return [] if interested_in.nil?
     interested_in.split
   end
