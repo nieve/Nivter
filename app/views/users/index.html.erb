@@ -4,13 +4,26 @@
 <div class='search'>
 	<label>Search for experienced users:</label>
 	<input type='text' class='search_term' />
+	<label for='country'>country</label>
+	<input type='text' id='country' class='search_term' />
+	<label for='city'>city</label>
+	<input type='text' id='city' class='search_term' />
+</div>
+<div class="search submit">
 	<a href="<%= users_path %>" class='btn btn-mini'>Search</a>
 </div>
 <script type="text/javascript">
 	$(function(){
 		$('.search a.btn').click(function(){
-			href = $(this).attr('href');
-			$(this).attr('href', href + '?search=' + $('.search_term').val());
+			var href = $(this).attr('href');
+			var search = $('.search_term').val();
+			var country = $('#country').val();
+			var city = $('#city').val();
+			var qs = '?';
+			if (search) {qs = 'search='+search;}
+			if (country) {qs = qs+(qs == '?' ? '':'&')+'country='+country;}
+			if (city) {qs = qs+(qs == '?' ? '':'&')+'city='+city;}
+			$(this).attr('href', href + qs);
 		});
 	});
 </script>
