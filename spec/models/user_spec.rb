@@ -67,21 +67,21 @@ describe User do
     before {@user.save}
     its(:remember_token) {should_not be_blank}
   end
-  describe "search by experience" do
+  describe "search" do
     before do
       @user.save
       sec_user = User.new(name: 'kyokox', email:'k@gawax.jp', password: 'tokyostoryx', experience:'mvc msmq mssql', password_confirmation: 'tokyostoryx', country: 'France', city: 'Lille')
       sec_user.save
     end
-    let(:search_results) {User.search_by_experience('msmq mvc')}
+    let(:search_results) {User.search(@user, 'msmq mvc')}
     specify {search_results.length.should == 1}
     specify {search_results[0].email.should == 'k@gawax.jp'}
     it "should find users only by exact match on tags" do
-      User.search_by_experience('mv').length.should == 0
-      User.search_by_experience('mvc ms').length.should == 0
-      User.search_by_experience('mvc mssql').length.should == 1
-      User.search_by_experience('mssql').length.should == 1
-      User.search_by_experience('mvc').length.should == 2
+      User.search(@user, 'mv').length.should == 0
+      User.search(@user, 'mvc ms').length.should == 0
+      User.search(@user, 'mvc mssql').length.should == 1
+      User.search(@user, 'mssql').length.should == 1
+      User.search(@user, 'mvc').length.should == 2
     end
   end
 	describe "when name is not present" do
@@ -131,8 +131,8 @@ describe User do
   end
   describe "city" do
     before {@user.city = "LILlE"; @user.save;}
-    it "should be down cased when saved" do
-      @user.city.should == "lille"
+    it "should be capitalized when saved" do
+      @user.city.should == "Lille"
     end
   end
   describe "when password is not present" do

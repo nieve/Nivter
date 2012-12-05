@@ -9,19 +9,25 @@ class User < ActiveRecord::Base
   has_secure_password
   
   before_save {self.email.downcase!}
-  before_save {self.city.downcase!}
+  before_save {self.city.capitalize!}
   before_save :create_remember_token
 
-  def self.search_by_experience(experience)
+  def self.search(current, experience=nil, country=nil, city=nil)
+    city = city || current.city
+    country = country || current.country
     users = User.scoped
-    experiences = experience.split
-    condition = 'experience LIKE :b OR experience LIKE :e OR experience LIKE :t'
-    if experiences.length == 1
-      tag = experiences[0]
-      users = users.where(condition + ' OR experience = :q', b: "#{tag} %", e: "% #{tag}", t: "% #{tag} %", q: tag)
-    else
-      experiences.each {|tag| users = users.where(condition, b: "#{tag} %", e: "% #{tag}", t: "% #{tag} %")}
+    if experience != nil
+      condition = 'experience LIKE :b OR experience LIKE :e OR experience LIKE :t'
+      experiences = experience.split
+      if experiences.length == 1
+        tag = experiences[0]
+        users = users.where(condition + ' OR experience = :q', b: "#{tag} %", e: "% #{tag}", t: "% #{tag} %", q: tag)
+      else
+        experiences.each {|tag| users = users.where(condition, b: "#{tag} %", e: "% #{tag}", t: "% #{tag} %")}
+      end
     end
+    users = users.where("country = '#{country}'") if country != nil
+    users = users.where("city = '#{city}'") if city != nil
     users
   end
 

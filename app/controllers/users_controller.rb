@@ -6,9 +6,10 @@ class UsersController < ApplicationController
   	@user = User.new
   end
   def index
-    search_term = params[:search]
-    page = params[:page]
-    @users = search_term.nil? ? User.paginate(page: page) : User.search_by_experience(search_term).paginate(page: page)
+    exp = params[:search]
+    country = params[:country]
+    city = params[:city]
+    @users = User.search(current_user, exp, country, city).paginate(page: params[:page])
   end
   def show
     @user = User.find(params[:id])

@@ -123,27 +123,62 @@ describe "User pages" do
     end
   end
   describe "search" do
-    let(:user) {FactoryGirl.create(:user)}
-    before(:all) do
-      30.times {FactoryGirl.create(:user)}
-      user.experience = "asp.net"
-      user.save
+    describe "by experience" do
+      let(:user) {FactoryGirl.create(:user)}
+      before(:all) do
+        30.times {FactoryGirl.create(:user)}
+        user.experience = "asp.net"
+        user.save
+      end
+      before(:each) do
+        sign_in user
+        visit users_path + '/?search=asp.net'
+      end
+      after(:all) do
+        User.delete_all
+        user.experience = "msmq mvc"
+        user.save
+      end
+      it "should display search results" do
+        page.should have_selector('li', text: user.name)
+      end
+      it "should not display unfound users" do
+        User.where("name != '#{user.name}'").each do |u|
+          page.should_not have_link(u.name, href: user_path(u))
+        end
+      end
     end
-    before(:each) do
-      sign_in user
-      visit users_path + '/?search=asp.net'
-    end
-    after(:all) do
-      User.delete_all
-      user.experience = "msmq mvc"
-      user.save
-    end
-    it "should display search results" do
-      page.should have_selector('li', text: user.name)
-    end
-    it "should not display unfound users" do
-      User.where("experience != '#{user.experience}'").each do |u|
-        page.should_not have_link(u.name, href: user_path(u))
+    describe "by location" do
+      let(:user) {FactoryGirl.create(:user)}
+      before(:all) do
+        9.times {FactoryGirl.create(:user)}
+        user.experience = "mssql"
+        user.city = "Lyon"
+        user.save
+      end
+      before(:each) do
+        sign_in user
+      end
+      after(:all) do
+        User.delete_all
+        user.city = "Lille"
+        user.save
+      end
+      it "should not display unfound users" do
+        visit users_path + '/?search=msmq%20mvc'
+        page.should_not have_selector('li', text: user.name)
+      end
+      it "should display search results" do
+        visit users_path + '/?search=msmq%20mvc&country=France&city=Lille'
+        User.where("city != '#{user.city}'").each do |u|
+          page.should have_link(u.name, href: user_path(u))
+        end
+      end
+      it "should not display non local users" do
+        visit users_path + '/?search=msmq%20mvc'
+        User.all.each do |u|
+          page.should_not have_link(u.name, href: user_path(u))
+        end
       end
     end
   end
