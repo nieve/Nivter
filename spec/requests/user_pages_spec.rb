@@ -73,6 +73,8 @@ describe "User pages" do
         fill_in "Email",        with: "user@example.com"
         fill_in "Password",     with: "foobar"
         fill_in "Confirm Password", with: "foobar"
+        select "France", from: "Country"
+        fill_in "City", with: "Lille"
       end
       it "should create a user" do
         expect { click_button submit }.to change(User, :count).by(1)

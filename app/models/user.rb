@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  attr_accessible :email, :name, :password, :password_confirmation, :experience, :interested_in
+  attr_accessible :email, :name, :password, :password_confirmation, :experience, :interested_in, :country, :city
   has_many :microposts, dependent: :destroy
   has_many :relationships, foreign_key: 'follower_id', dependent: :destroy
   has_many :reverse_relationships, foreign_key: 'followed_id', 
@@ -9,6 +9,7 @@ class User < ActiveRecord::Base
   has_secure_password
   
   before_save {self.email.downcase!}
+  before_save {self.city.downcase!}
   before_save :create_remember_token
 
   def self.search_by_experience(experience)
@@ -60,4 +61,6 @@ class User < ActiveRecord::Base
   validates :password_confirmation, presence: true
   validates :email, presence: true, format: {with: VALID_EMAIL_REGEX}, 
   									uniqueness: {case_sensitive: false}
+  validates :country, presence: true, :inclusion => { :in => COUNTRIES, :message => "%{value} is not a valid country" }
+  validates :city, presence: true
 end

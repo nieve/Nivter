@@ -12,6 +12,12 @@
 	<%= f.label :password_confirmation, "Confirm Password" %>
 	<%= f.password_field :password_confirmation %>
 
+	<%= f.label :country, "Country" %>
+	<%= f.select(:country, COUNTRIES) %>
+
+	<%= f.label :city, "City" %>
+	<%= f.text_field(:city) %>
+
 	<label>Areas of Experience</label>
 	<input type="hidden" id="experience" name="user[experience]" value="<%= user.experience %>" />
 	<div class="tags_display" id='tagdisplay'>

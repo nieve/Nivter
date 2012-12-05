@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe User do
 	before {@user = User.new(name: 'kyoko', email:'k@gawa.jp',
-									password: 'tokyostory', experience:'mvc', password_confirmation: 'tokyostory')}
+									password: 'tokyostory', experience:'mvc', password_confirmation: 'tokyostory', country: 'France', city: 'Lille')}
 	subject {@user}
   it {should respond_to(:admin)}
 	it {should respond_to(:email)}
@@ -14,6 +14,8 @@ describe User do
   it {should respond_to(:followers)}
   it {should respond_to(:experience)}
   it {should respond_to(:interested_in)}
+  it {should respond_to(:country)}
+  it {should respond_to(:city)}
   it {should respond_to(:following?)}
   it {should respond_to(:follow!)}
 	it {should respond_to(:unfollow!)}
@@ -68,7 +70,7 @@ describe User do
   describe "search by experience" do
     before do
       @user.save
-      sec_user = User.new(name: 'kyokox', email:'k@gawax.jp', password: 'tokyostoryx', experience:'mvc msmq mssql', password_confirmation: 'tokyostoryx')
+      sec_user = User.new(name: 'kyokox', email:'k@gawax.jp', password: 'tokyostoryx', experience:'mvc msmq mssql', password_confirmation: 'tokyostoryx', country: 'France', city: 'Lille')
       sec_user.save
     end
     let(:search_results) {User.search_by_experience('msmq mvc')}
@@ -127,6 +129,12 @@ describe User do
       @user.email.should == "downcase@email.com"
     end
   end
+  describe "city" do
+    before {@user.city = "LILlE"; @user.save;}
+    it "should be down cased when saved" do
+      @user.city.should == "lille"
+    end
+  end
   describe "when password is not present" do
     before { @user.password = @user.password_confirmation = " " }
     it { should_not be_valid }
@@ -161,5 +169,17 @@ describe User do
       @user.toggle!(:admin)
     end
     it { should be_admin }
+  end
+  describe "when country is not present" do
+    before {@user.country = " "}
+    it {should_not be_valid}
+  end
+  describe "when country is not in countries" do
+    before {@user.country = "La-la-land"}
+    it {should_not be_valid}
+  end
+  describe "when city is not present" do
+    before {@user.city = " "}
+    it {should_not be_valid}
   end
 end

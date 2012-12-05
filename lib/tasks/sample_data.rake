@@ -13,7 +13,9 @@ def make_users
                        password: "foobar",
                        experience: "msmq mvc sysadmin mssql",
                        interested_in: "nservicebus backbone",
-                       password_confirmation: "foobar")
+                       password_confirmation: "foobar",
+                       country: "France",
+                       city: "Lille")
   admin.toggle!(:admin)
   98.times do |n|
     name  = Faker::Name.name
@@ -25,7 +27,9 @@ def make_users
                  password: password,
                  experience: experience,
                  interested_in: "mssql backbone",
-                 password_confirmation: password)
+                 password_confirmation: password,
+                 country: "France",
+                 city: "Lille")
   end
   name  = Faker::Name.name
   email = "example-100@railstutorial.org"
@@ -36,7 +40,9 @@ def make_users
                password: password,
                experience: experience,
                interested_in: "mssql mssql backbone",
-               password_confirmation: password)
+               password_confirmation: password,
+               country: "France",
+               city: "Lille")
 end
 
 def make_microposts
